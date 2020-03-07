@@ -9,6 +9,7 @@
 #' compareModels(model_list = allModels,
 #'               test_data = ames_test_engineered,
 #'               model_order = "RMSE")
+#' @export
 compareModels <- function(model_list, test_data, model_order = "RMSE", title = "Comparing model metrics"){
 
   #Get outcome variable name
