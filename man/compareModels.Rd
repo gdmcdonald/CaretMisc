@@ -2,11 +2,11 @@
 % Please edit documentation in R/compareModels.R
 \name{compareModels}
 \alias{compareModels}
-\title{Compare evaluation metrics for cross-validation on the training set and on the test set for a caret model.}
+\title{Compare evaluation metrics for cross-validation on the training set and on the test set for a caret model. Return the result as a ggplot object.}
 \usage{
 compareModels(
   model_list,
-  test_data,
+  test_data = NULL,
   model_order = "RMSE",
   title = "Comparing model metrics"
 )
@@ -24,7 +24,7 @@ compareModels(
 a ggplot object.
 }
 \description{
-Compare evaluation metrics for cross-validation on the training set and on the test set for a caret model.
+Compare evaluation metrics for cross-validation on the training set and on the test set for a caret model. Return the result as a ggplot object.
 }
 \examples{
 compareModels(model_list = allModels,
