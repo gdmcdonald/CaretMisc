@@ -1,6 +1,6 @@
 Package: CaretMisc
 Title: Miscellaneous Functions To Make Caret Easier
-Version: 0.0.1.000
+Version: 0.0.1.100
 Authors@R: 
     person(given = "Gordon",
            family = "McDonald",
