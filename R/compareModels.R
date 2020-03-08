@@ -1,4 +1,4 @@
-#' Compare evaluation metrics for cross-validation on the training set and on the test set for a caret model.
+#' Compare evaluation metrics for cross-validation on the training set and on the test set for a caret model. Return the result as a ggplot object.
 #'
 #' @param model_list A named list of caret models.
 #' @param test_data The test set of data for evaluation.
@@ -12,76 +12,10 @@
 #' @export
 compareModels <- function(model_list, test_data = NULL, model_order = "RMSE", title = "Comparing model metrics"){
 
-  #Get outcome variable name
-
-  outcome_var <- as.character(
-    model_list[[1]]$terms[[2]]
-  )
-
-  # Get training data metrics
-
-  tidy_train_metrics <-
-    lapply(model_list,
-           function(x){
-             x[["resample"]] %>%
-               tidyr::gather(-Resample,key = "metric",value = "value")
-           }) %>%
-    dplyr::bind_rows(.id = 'model') %>%
-    dplyr::mutate(test_train = "1. train")
-
-  # Get testing data metrics if test data was supplied
-  if (!is.null(test_data)){
-
-    allPreds<-lapply(model_list,predict,test_data) %>%
-      unlist() %>%
-      matrix(.,ncol = length(model_list)) %>%
-      {colnames(.)<-names(model_list);
-      .}
-
-    tidy_test_metrics <- apply(allPreds,
-                               2,
-                               caret::postResample,
-                               obs = test_data[[outcome_var]]) %>%
-      dplyr::as_tibble(rownames = "metric") %>%
-      tidyr::pivot_longer(-metric,names_to = c("model")) %>%
-      dplyr::mutate(test_train = "2. test",
-                    Resample = "test")
-
-    # bind metrics together
-    metrics <- rbind(tidy_test_metrics,
-                     tidy_train_metrics)
-
-  } else {
-    metrics <- tidy_train_metrics
-  }
-
-  #summary of metrics for ordering
-  sm <- metrics %>%
-    dplyr::group_by(model,metric) %>%
-    dplyr::summarise(median_metric = median(value)) %>%
-    dplyr::ungroup() %>%
-    dplyr::arrange(metric,median_metric)
-
-  if (is.null(test_data)){
-
-    model_order <- sm %>%
-      dplyr::filter(metric == model_order) %>%
-      {.[["model"]]}
-
-  } else {
-
-    model_order <- metrics %>%
-      dplyr::filter(metric == model_order,
-                    test_train == "2. test") %>%
-      dplyr::arrange(value) %>%
-      {.[["model"]]}
-
-  }
-
-
-  #order the models and then plot everything
-  p <- metrics %>%
-    dplyr::mutate(model = factor(model, levels = model_order, ordered = T)) %>%
+  #Plot the result of the compareModelsDf function
+  p <- compareModelsDf(model_list = model_list,
+                       test_data = test_data,
+                       model_order = model_order) %>%
     ggplot2::ggplot(aes(y = value,
                         x = model,
                         color = test_train))+
