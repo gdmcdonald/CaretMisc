@@ -13,13 +13,13 @@
 compareModels <- function(model_list, test_data = NULL, model_order = "RMSE", title = "Comparing model metrics"){
 
   #Get outcome variable name
-  
+
   outcome_var <- as.character(
     model_list[[1]]$terms[[2]]
   )
 
   # Get training data metrics
-  
+
   tidy_train_metrics <-
     lapply(model_list,
            function(x){
@@ -62,9 +62,22 @@ compareModels <- function(model_list, test_data = NULL, model_order = "RMSE", ti
     dplyr::ungroup() %>%
     dplyr::arrange(metric,median_metric)
 
-  model_order <- sm %>%
-    dplyr::filter(metric == model_order) %>%
-    {.[["model"]]}
+  if (is.null(test_data)){
+
+    model_order <- sm %>%
+      dplyr::filter(metric == model_order) %>%
+      {.[["model"]]}
+
+  } else {
+
+    model_order <- metrics %>%
+      dplyr::filter(metric == model_order,
+                    test_train == "2. test") %>%
+      dplyr::arrange(value) %>%
+      {.[["model"]]}
+
+  }
+
 
   #order the models and then plot everything
   p <- metrics %>%
