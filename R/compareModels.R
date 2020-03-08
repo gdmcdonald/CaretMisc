@@ -13,14 +13,13 @@
 compareModels <- function(model_list, test_data, model_order = "RMSE", title = "Comparing model metrics"){
 
   #Get outcome variable name
+  
   outcome_var <- as.character(
     model_list[[1]]$terms[[2]]
   )
 
   # Get training data metrics
-
-  allResamples <- caret::resamples(model_list)
-
+  
   tidy_train_metrics <-
     lapply(model_list,
            function(x){
