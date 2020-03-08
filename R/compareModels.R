@@ -21,8 +21,13 @@ compareModels <- function(model_list, test_data, model_order = "RMSE", title = "
 
   allResamples <- caret::resamples(model_list)
 
-  tidy_train_metrics <- allResamples$values %>%
-    tidyr::pivot_longer(names_sep = "~",names_to = c("model","metric"),cols = -Resample) %>%
+  tidy_train_metrics <-
+    lapply(model_list,
+           function(x){
+             x[["resample"]] %>%
+               tidyr::gather(-Resample,key = "metric",value = "value")
+           }) %>%
+    dplyr::bind_rows(.id = 'model') %>%
     dplyr::mutate(test_train = "1. train")
 
   # Get testing data metrics
