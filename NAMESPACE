@@ -3,4 +3,5 @@
 export("%>%")
 export(compareModels)
 export(compareModelsDf)
+export(eval_classifier)
 importFrom(magrittr,"%>%")
