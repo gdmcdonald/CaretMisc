@@ -16,7 +16,7 @@ eval_classifier <- function(trained_model, test_data) {
   y_pred <- predict(trained_model, test_data, type = "raw")
   y_pred_prob <- predict(trained_model, test_data, type = "prob")
   # spit out the confusion matrix on the test set
-  confm <- confusionMatrix(data = y_pred, y_test, positive="diabetes")
+  confm <- caret::confusionMatrix(data = y_pred, y_test, positive="diabetes")
   print(confm)
 
   # make test predictions data frame
@@ -35,7 +35,7 @@ eval_classifier <- function(trained_model, test_data) {
   }
 
   # Get the test set AUC:
-  test_auc <- auc(y_test, y_pred_prob$diabetes)
+  test_auc <- pROC::auc(y_test, y_pred_prob$diabetes)
 
   metrics <- data.frame(
     accuracy = confm[['overall']]['Accuracy'],
@@ -51,12 +51,12 @@ eval_classifier <- function(trained_model, test_data) {
     selected_pred,
     aes(m = normal, d = obs, col = "train")
   ) +
-    geom_roc(
+    plotROC::geom_roc(
       hjust = -0.4,
       vjust = 1.5
     ) +
     # add test ROC in blue
-    geom_roc(
+    plotROC::geom_roc(
       hjust = -0.4,
       vjust = 1.5,
       data = tdf,
