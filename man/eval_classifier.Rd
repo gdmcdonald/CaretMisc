@@ -4,12 +4,14 @@
 \alias{eval_classifier}
 \title{Evaluate a caret classification model using AUC and other metrics.}
 \usage{
-eval_classifier(trained_model, test_data)
+eval_classifier(trained_model, test_data, positive = NULL)
 }
 \arguments{
 \item{trained_model}{A caret classifier model.}
 
 \item{test_data}{The test set of data for evaluation.}
+
+\item{positive}{The name of the positive class. Defaults to the first level if positive = NULL.}
 }
 \value{
 a dataframe is returned and a ggplot is printed as a side effect.
