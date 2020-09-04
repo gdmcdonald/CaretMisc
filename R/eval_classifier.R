@@ -35,7 +35,8 @@ eval_classifier <- function(trained_model, test_data, positive = NULL) {
 
   # Select a parameter setting if random forest
   if (trained_model$method == "rf") {
-    selectedIndices <- trained_model$pred$mtry == 2
+    chosen_value <- quantile(trained_model$pred$mtry ,probs = 0.5, type = 1)
+    selectedIndices <- trained_model$pred$mtry == chosen_value
     selected_pred <- trained_model$pred[selectedIndices, ]
   } else {
     selected_pred <- trained_model$pred
