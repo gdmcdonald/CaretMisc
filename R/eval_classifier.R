@@ -50,7 +50,7 @@ eval_classifier <- function(trained_model, test_data, positive = NULL) {
     specificity = confm[['byClass']]['Specificity'],
     precision = confm[['byClass']]['Precision'],
     recall = confm[['byClass']]['Recall'],
-    test_auc = test_auc) %>%
+    test_auc = as.numeric(test_auc)) %>%
     mutate(f1 = 2*((precision*recall)/(precision+recall)))
 
   # plot train ROC in red
